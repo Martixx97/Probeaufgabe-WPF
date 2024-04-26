@@ -15,6 +15,7 @@ public partial class Person
 
     public string? Location { get; set; }
 
-    public virtual ICollection<PersonPhonenumber> PersonPhonenumbers { get; set; } = new List<PersonPhonenumber>();
+    public byte[]? Picture { get; set; }
 
+    public virtual ICollection<PersonPhonenumber> PersonPhonenumbers { get; set; } = new List<PersonPhonenumber>();
 }

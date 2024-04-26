@@ -11,5 +11,7 @@ public partial class PersonPhonenumber
 
     public string? Number { get; set; }
 
+    public string? Type { get; set; }
+
     public virtual Person Person { get; set; } = null!;
 }

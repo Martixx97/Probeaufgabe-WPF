@@ -16,7 +16,7 @@ public partial class ProbeaufgabeWpfContext : DbContext
     {
     }
 
-    public virtual DbSet<Person> People { get; set; }
+    public virtual DbSet<Person> Person { get; set; }
 
     public virtual DbSet<PersonPhonenumber> PersonPhonenumbers { get; set; }
 
