@@ -1,30 +1,71 @@
-﻿using System;
+﻿using Probeaufgabe_WPF.Data;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Probeaufgabe_WPF.Models;
 
-public partial class PersonPhonenumber
+public partial class PersonPhonenumber : INotifyPropertyChanged
 {
-    public int Id { get; set; }
+    private int id;
+    private int personId;
+    private string? number;
+    private string? type;
+    public virtual Person? Person { get; set; }
 
-    public int PersonId { get; set; }
-
-    public string? Number { get; set; }
-
-    public string? Type { get; set; }
-
-    public virtual Person Person { get; set; } = null!;
-
-    internal PersonPhonenumber(Person person, string number, string type)
+    public int Id
     {
-        this.Person = person;
-        this.Number = number;
-        this.Type = type;
+
+        get => id; set
+        {
+            id = value;
+            onPropertyChanged(nameof(Id));
+        }
     }
-    internal PersonPhonenumber(int personId, string number, string type)
+
+    public int PersonId
     {
-        this.PersonId = personId;
-        this.Number = number;
-        this.Type = type;
+
+        get => personId; set
+        {
+            personId = value;
+            onPropertyChanged(nameof(PersonId));
+        }
     }
+
+    public string Number
+    {
+
+        get => number; set
+        {
+            number = value;
+            onPropertyChanged(nameof(Number));
+        }
+    }
+
+    public string Type
+    {
+
+        get => type; set
+        {
+            type = value;
+            onPropertyChanged(nameof(Type));
+        }
+    }
+
+    private Person getPerson(int personID)
+    {
+        PersonEntities entities = new PersonEntities();
+        List<Person> persons = entities.Person.ToList();
+        return persons.FirstOrDefault(x => x.Id == personID); ;
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected void onPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
 }

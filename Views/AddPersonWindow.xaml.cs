@@ -22,33 +22,41 @@ namespace Probeaufgabe_WPF.Views
     /// <summary>
     /// Interaction logic for AddPerson.xaml
     /// </summary>
-    public partial class AddPerson : Window
+    public partial class AddPersonWindow : Window
     {
-        private MainViewModel mainViewModel;
-        private object dataContext;
-        public AddPerson(MainViewModel mainViewModel = null)
+        public AddPersonWindow()
         {
+            personEntities = new PersonEntities();
             InitializeComponent();
-            this.mainViewModel = mainViewModel;
         }
+
+        PersonEntities personEntities;
+
+
+
+
         private void Send_PersonData_To_DB(object sender, RoutedEventArgs e)
         {
             Dictionary<string, string> phonenumbers = getAllPhonenumbersFromXAMLContainers();
             if (phonenumbers != null)
             {
+                Person person = new Person(Name_TB.Text, Surname_TB.Text, PLZ_TB.Text, Location_TB.Text, null, phonenumbers);
+                personEntities.Person.Add(person);
 
+                if (phonenumbers.Count > 0)
+                    foreach (KeyValuePair<string, string> phonenumber in phonenumbers)
+                    {
+                        PersonPhonenumber personPhonenumber = new PersonPhonenumber();
+                        personPhonenumber.Id = person.Id;
+                        personPhonenumber.Number = phonenumber.Key;
+                        personPhonenumber.Type = phonenumber.Value;
+                        personEntities.PersonPhonenumbers.Add(personPhonenumber);
+                    }
 
-                Person newPerson = new Person(Name_TB.Text, Surname_TB.Text, PLZ_TB.Text, Location_TB.Text,null, phonenumbers);
-
-                PersonManager.AddPerson(newPerson);
-
+                personEntities.SaveChanges();
 
                 MessageBox.Show("You added successfully a new person to the Database!");
 
-                if (mainViewModel != null)
-                {
-                    mainViewModel.RefreshList();
-                }
                 this.Close();
             }
             else
@@ -78,7 +86,7 @@ namespace Probeaufgabe_WPF.Views
                     }
                     try
                     {
-                        if (number != null && type != null)
+                        if (number != null && number != "" && type != null)
                             phonenumbers.Add(number, type);
                     }
                     catch (Exception ex)

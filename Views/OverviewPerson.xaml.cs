@@ -27,12 +27,8 @@ namespace Probeaufgabe_WPF.Views
         {
             InitializeComponent();
 
-            MainViewModel mainViewModel = new MainViewModel();
-            this.mainViewModel = mainViewModel;
-            this.DataContext = mainViewModel;
+            this.DataContext = new MainViewModel();
         }
-
-        private MainViewModel mainViewModel;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -45,14 +41,10 @@ namespace Probeaufgabe_WPF.Views
         {
             var person = (Person)obj;
 
-            return person.Name.Contains(FilterTextBox.Text, StringComparison.OrdinalIgnoreCase);
-        }
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            AddPerson addPerson= new AddPerson(mainViewModel, this.DataContext);
-            addPerson.Show();
+            bool filter= person.Name.Contains(FilterTextBox.Text, StringComparison.OrdinalIgnoreCase) || person.Surname.Contains(FilterTextBox.Text, StringComparison.OrdinalIgnoreCase) ||
+                person.Plz.Contains(FilterTextBox.Text, StringComparison.OrdinalIgnoreCase) || person.Location.Contains(FilterTextBox.Text, StringComparison.OrdinalIgnoreCase);
 
+            return filter;
         }
-
     }
 }

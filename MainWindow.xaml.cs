@@ -15,15 +15,9 @@ namespace Probeaufgabe_WPF
     public partial class MainWindow : Window
     {
 
-        public static ProbeaufgabeWpfContext _DatabaseContext;
+
         public MainWindow()
         {
-            var context = new ProbeaufgabeWpfContext();
-            _DatabaseContext = context;
-            List<Person> persons = context.Person.ToList();
-            foreach (Person person in persons)
-                Console.WriteLine(person.Name);
-            context.PersonPhonenumbers.ToList();
 
 
             //_DatabaseContext = new ProbeaufgabeWpfContext();

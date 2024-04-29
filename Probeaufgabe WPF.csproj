@@ -23,10 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="Images\Add.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

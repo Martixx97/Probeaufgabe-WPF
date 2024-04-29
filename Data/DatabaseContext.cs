@@ -5,14 +5,14 @@ using Probeaufgabe_WPF.Models;
 
 namespace Probeaufgabe_WPF.Data;
 
-public partial class ProbeaufgabeWpfContext : DbContext
+public partial class DatabaseContext : DbContext
 {
 
-    public ProbeaufgabeWpfContext()
+    public DatabaseContext()
     {
     }
 
-    public ProbeaufgabeWpfContext(DbContextOptions<ProbeaufgabeWpfContext> options)
+    public DatabaseContext(DbContextOptions<DatabaseContext> options)
         : base(options)
     {
     }
@@ -27,10 +27,14 @@ public partial class ProbeaufgabeWpfContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Person>()
+            .HasMany(p => p.PersonPhonenumbers)
+            .WithOne(pn => pn.Person)
+            .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<Person>(entity =>
         {
             entity.ToTable("Person");
-
+             
             entity.HasIndex(e => e.Id, "IX_Person_ID").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("ID");
@@ -46,9 +50,7 @@ public partial class ProbeaufgabeWpfContext : DbContext
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.PersonId).HasColumnName("Person_ID");
 
-            entity.HasOne(d => d.Person).WithMany(p => p.PersonPhonenumbers)
-                .HasForeignKey(d => d.PersonId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+            entity.HasOne(d => d.Person).WithMany(p => p.PersonPhonenumbers).HasForeignKey(d => d.PersonId);
         });
 
         OnModelCreatingPartial(modelBuilder);

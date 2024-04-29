@@ -1,24 +1,91 @@
-﻿using System;
+﻿using Probeaufgabe_WPF.Data;
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Xaml.Schema;
 
 namespace Probeaufgabe_WPF.Models;
 
-public partial class Person
+public partial class Person : INotifyPropertyChanged
 {
-    public int Id { get; set; }
+    private int id;
+    private string? name;
+    private string? surname;
+    private string? plz;
+    private string? location;
+    private byte[]? picture;
+    public ICollection<PersonPhonenumber> personPhonenumbers = new List<PersonPhonenumber>();
 
-    public string? Name { get; set; }
+    public ICollection<PersonPhonenumber> PersonPhonenumbers
+    {
+        get => personPhonenumbers; 
+        set
+        {
+            personPhonenumbers = value;
+            onPropertyChanged(nameof(PersonPhonenumbers));
+        }
+    }
 
-    public string? Surname { get; set; }
+    public int Id
+    {
 
-    public string? Plz { get; set; }
+        get => id; set
+        {
+            id = value;
+            onPropertyChanged(nameof(Id));
+        }
+    }
 
-    public string? Location { get; set; }
+    public string? Name
+    {
 
-    public byte[]? Picture { get; set; }
+        get => name; set
+        {
+            name = value;
+            onPropertyChanged(nameof(Name));
+        }
+    }
 
-    public virtual ICollection<PersonPhonenumber> PersonPhonenumbers { get; set; } = new List<PersonPhonenumber>();
+    public string? Surname
+    {
+
+        get => surname; set
+        {
+            surname = value;
+            onPropertyChanged(nameof(Surname));
+        }
+    }
+    public string? Plz
+    {
+
+        get => plz; set
+        {
+            plz = value;
+            onPropertyChanged(nameof(Plz));
+        }
+    }
+
+    public string? Location
+    {
+
+        get => location; set
+        {
+            location = value;
+            onPropertyChanged(nameof(Location));
+        }
+    }
+
+    public byte[]? Picture
+    {
+
+        get => picture; set
+        {
+            picture = value;
+            onPropertyChanged(nameof(Picture));
+        }
+    }
 
     internal Person(string name, string surname, string plz, string location, byte[] picture)
     {
@@ -29,18 +96,22 @@ public partial class Person
         this.Picture = picture;
     }
 
-    internal Person(string name, string surname, string plz, string location, byte[]? picture , Dictionary<string, string> phonenumbers)
+    internal Person(string name, string surname, string plz, string location, byte[]? picture, Dictionary<string, string> phonenumbers)
     {
         this.Name = name;
         this.Surname = surname;
         this.Plz = plz;
         this.Location = location;
+       
+    }
+    public Person()
+    {
 
-        if (phonenumbers.Count != 0)
-            foreach (KeyValuePair<string, string> phonenumber in phonenumbers)
-            {
-                PersonPhonenumber personPhonenumber = new PersonPhonenumber(this, phonenumber.Key, phonenumber.Value);
-                this.PersonPhonenumbers.Add(personPhonenumber);
-            }
+    }
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected void onPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

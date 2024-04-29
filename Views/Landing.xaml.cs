@@ -1,4 +1,6 @@
-﻿using Probeaufgabe_WPF.ViewModel;
+﻿using Probeaufgabe_WPF.Data;
+using Probeaufgabe_WPF.Models;
+using Probeaufgabe_WPF.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,8 +23,15 @@ namespace Probeaufgabe_WPF.Views
     /// </summary>
     public partial class Landing : Page
     {
+        public static DatabaseContext _DatabaseContext;
         public Landing()
         {
+            var context = new DatabaseContext();
+            _DatabaseContext = context;
+            List<Person> persons = context.Person.ToList();
+            foreach (Person person in persons)
+                Console.WriteLine(person.Name);
+            context.PersonPhonenumbers.ToList();
             InitializeComponent();
         }
 
@@ -40,7 +49,7 @@ namespace Probeaufgabe_WPF.Views
 
         private void Button_Add_Click(object sender, RoutedEventArgs e)
         {
-            AddPerson  addPerson = new AddPerson();
+            AddPersonWindow  addPerson = new AddPersonWindow();
             addPerson.Show();
         }
     }
