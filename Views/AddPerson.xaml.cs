@@ -1,7 +1,7 @@
 ﻿using Microsoft.Win32;
 using Probeaufgabe_WPF.Data;
-using Probeaufgabe_WPF.DataHandler;
 using Probeaufgabe_WPF.Models;
+using Probeaufgabe_WPF.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,16 +17,19 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Probeaufgabe_WPF.Pages
+namespace Probeaufgabe_WPF.Views
 {
     /// <summary>
     /// Interaction logic for AddPerson.xaml
     /// </summary>
-    public partial class AddPerson : Page
+    public partial class AddPerson : Window
     {
-        public AddPerson()
+        private MainViewModel mainViewModel;
+        private object dataContext;
+        public AddPerson(MainViewModel mainViewModel = null)
         {
             InitializeComponent();
+            this.mainViewModel = mainViewModel;
         }
         private void Send_PersonData_To_DB(object sender, RoutedEventArgs e)
         {
@@ -35,30 +38,18 @@ namespace Probeaufgabe_WPF.Pages
             {
 
 
-                PersonHandler newPerson = new PersonHandler(Name_TB.Text, Surname_TB.Text, PLZ_TB.Text, Location_TB.Text, phonenumbers);
+                Person newPerson = new Person(Name_TB.Text, Surname_TB.Text, PLZ_TB.Text, Location_TB.Text,null, phonenumbers);
 
-                var context = new ProbeaufgabeWpfContext();
+                PersonManager.AddPerson(newPerson);
 
-                //var transaction = context.Database.BeginTransaction;
-
-                context.Attach(newPerson);
-                context.SaveChanges();
-
-                //context.Remove(person1);
-                //context.SaveChanges();
-
-                //transaction.Commit();
 
                 MessageBox.Show("You added successfully a new person to the Database!");
 
-                //InfoPopup infowindow = new InfoPopup();
-                //infowindow.Show();
-
-
-                List<Person> persons = context.Person.ToList();
-                foreach (Person person in persons)
-                    Console.WriteLine(person.Name);
-                context.PersonPhonenumbers.ToList();
+                if (mainViewModel != null)
+                {
+                    mainViewModel.RefreshList();
+                }
+                this.Close();
             }
             else
                 MessageBox.Show("Adding to the Database failed!");

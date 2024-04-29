@@ -7,6 +7,7 @@ namespace Probeaufgabe_WPF.Data;
 
 public partial class ProbeaufgabeWpfContext : DbContext
 {
+
     public ProbeaufgabeWpfContext()
     {
     }

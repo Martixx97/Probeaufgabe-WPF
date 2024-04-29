@@ -1,5 +1,4 @@
 ﻿using Probeaufgabe_WPF.Data;
-using Probeaufgabe_WPF.DataHandler;
 using Probeaufgabe_WPF.Models;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,15 +7,28 @@ using System.Reflection.Emit;
 using Microsoft.Win32;
 using System.Windows.Media.Imaging;
 
-namespace Probeaufgabe_WPF
+namespace Probeaufgabe_WPF  
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        public static ProbeaufgabeWpfContext _DatabaseContext;
         public MainWindow()
         {
+            var context = new ProbeaufgabeWpfContext();
+            _DatabaseContext = context;
+            List<Person> persons = context.Person.ToList();
+            foreach (Person person in persons)
+                Console.WriteLine(person.Name);
+            context.PersonPhonenumbers.ToList();
+
+
+            //_DatabaseContext = new ProbeaufgabeWpfContext();
+
+            //var test = MainWindow._DatabaseContext.Person;
             InitializeComponent();
 
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Probeaufgabe_WPF.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Probeaufgabe_WPF.Pages
+namespace Probeaufgabe_WPF.Views
 {
     /// <summary>
     /// Interaction logic for Landing.xaml
@@ -27,8 +28,20 @@ namespace Probeaufgabe_WPF.Pages
 
         private void Grid_Click(object sender, RoutedEventArgs e)
         {
-            var ClickedButton = e.OriginalSource as NavButton;
-            NavigationService.Navigate(ClickedButton.NavUri);
+            //var ClickedButton = e.OriginalSource as NavButton;
+            //NavigationService.Navigate(ClickedButton.NavUri);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            OverviewPerson overviewPerson = new OverviewPerson();
+            overviewPerson.Show();
+        }
+
+        private void Button_Add_Click(object sender, RoutedEventArgs e)
+        {
+            AddPerson  addPerson = new AddPerson();
+            addPerson.Show();
         }
     }
 }
