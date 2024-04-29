@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -30,12 +29,12 @@ namespace Probeaufgabe_WPF.Views
 
             MainViewModel mainViewModel = new MainViewModel();
             this.mainViewModel = mainViewModel;
-            this.ViewDataContext = mainViewModel;
+            this.DataContext = mainViewModel;
         }
 
         private MainViewModel mainViewModel;
 
-
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         private void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -48,32 +47,12 @@ namespace Probeaufgabe_WPF.Views
 
             return person.Name.Contains(FilterTextBox.Text, StringComparison.OrdinalIgnoreCase);
         }
-
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            AddPerson addPerson = new AddPerson(mainViewModel);
-            addPerson.ShowDialog();
-            NotifyPropertyChanged();
+            AddPerson addPerson= new AddPerson(mainViewModel, this.DataContext);
+            addPerson.Show();
 
         }
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "PersonList")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        //private object _dataContext;
-        public object ViewDataContext
-        {
-            get { return this.DataContext; }
-            set
-            {
-                if (this.DataContext != value)
-                {
-                    this.DataContext = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
+
     }
 }
