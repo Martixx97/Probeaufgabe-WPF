@@ -76,11 +76,12 @@ namespace Probeaufgabe_WPF.ViewModel
             }
             personEntities.SaveChanges();
             SelectedPerson_ImageSource = null;
-            while (PhoneNumbers.Count > 0)
+                        while (PhoneNumbers.Count > 0)
             {
                 PhoneNumbers.RemoveAt(PhoneNumbers.Count - 1);
             }
             SelectedPerson = new Person();
+
         }
 
         private void Update(object obj)
@@ -96,7 +97,7 @@ namespace Probeaufgabe_WPF.ViewModel
             if (selectedPersonPhonenumbers.Count() > 0)
                 foreach (var phonenumber in selectedPersonPhonenumbers)
                 {
-                    PhoneNumbers.Add(phone number);
+                    PhoneNumbers.Add(phonenumber);
                 }
             if (SelectedPerson.Picture != null)
             {
