@@ -104,27 +104,35 @@
                             <Label Grid.Row="4" Grid.Column="0" Content="Location"/>
                             <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding SelectedPerson.Location}"/>
 
-                            <Label Grid.Row="5" Grid.Column="0" Content="Phonenumber"/>
-                            <ComboBox Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" Width="Auto" Margin="0,0,10,0">
-                                <ComboBoxItem>private</ComboBoxItem>
-                                <ComboBoxItem>work</ComboBoxItem>
-                                <ComboBoxItem>mobile</ComboBoxItem>
-                                <ComboBoxItem IsSelected="True" >other</ComboBoxItem>
-                            </ComboBox>
-                            <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding SelectedPerson.Type}"/>
+                            <Label Grid.Row="5"  Content="Telephonenumbers" Margin="0,10,0,0"/>
+                            <Button Grid.Row="5" Grid.Column="1" Content="Add Phone Number" Command="{Binding AddPhoneNumberCommand}" />
 
-                            <Button Grid.Row="6" Grid.ColumnSpan="2" Content="Add more Phonenumbers" Margin="5" HorizontalAlignment="Center" 
-                                    Width="150" Command="{Binding AddPhonenumbersCommand}"/>
+                            <!-- List of phone numbers -->
+                            <ItemsControl Grid.Row="6" Grid.Column="1" ItemsSource="{Binding PhoneNumbers}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0,5">
+                                            <ComboBox SelectedItem="{Binding Type}" Width="100" Margin="0,0,10,0">
+                                                <ComboBoxItem Content="private"/>
+                                                <ComboBoxItem Content="work"/>
+                                                <ComboBoxItem Content="mobile"/>
+                                                <ComboBoxItem Content="other" IsSelected="True"/>
+                                            </ComboBox>
+                                            <TextBox Width="150" Text="{Binding Number}" Margin="0,0,10,0"/>
+                                            <Button Content="Remove" Command="{Binding DataContext.RemovePhoneNumberCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" Margin="0,0,10,0"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                             <StackPanel Grid.Column="2" Grid.RowSpan="6">
                                 <Image Source="{Binding SelectedPerson_ImageSource}" x:Name="imagePicture" Margin="0,0,0,0" Width="200" Height="155"  MaxWidth="200" MaxHeight="155">
 
                                 </Image>
                                 <Button Width="90" Command="{Binding UploadPictureCommand}" Content="Upload picture"/>
+                                <Button Grid.Row="7" Grid.Column="3" Content="Update" Margin="5" HorizontalAlignment="Right"
+                                        Width="100" Command="{Binding UpdatePersonCommand}"/>
                             </StackPanel>
                         </Grid>
-                        <Button Grid.Row="7" Grid.Column="3" Content="Update" Margin="5" HorizontalAlignment="Right"
-                        Width="100" Command="{Binding UpdatePersonCommand}"/>
-
                     </StackPanel>
                 </Grid>
             </Border>

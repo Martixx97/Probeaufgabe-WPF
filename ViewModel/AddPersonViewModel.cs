@@ -4,6 +4,7 @@ using Probeaufgabe_WPF.Data;
 using Probeaufgabe_WPF.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
@@ -24,8 +25,13 @@ namespace Probeaufgabe_WPF.ViewModel
         public AddPersonViewModel()
         {
             personEntities = new PersonEntities();
+            person = new Person();
+            PhoneNumbers = new ObservableCollection<PersonPhonenumber>();
             AddPersonCommand = new Command((s) => V, AddPerson);
             UploadPictureCommand = new Command((s) => V, UploadPicture);
+            AddPhoneNumberCommand = new Command((s)=> V,AddPhoneNumber);
+            RemovePhoneNumberCommand = new Command((s) => V,RemovePhoneNumber);
+
         }
 
         public void UploadPicture(object obj)
@@ -55,8 +61,20 @@ namespace Probeaufgabe_WPF.ViewModel
         private void AddPerson(object obj)
         {
             personEntities.Person.Add(Person);
+            foreach (var phoneNumber in PhoneNumbers) {
+                PersonPhonenumber nPPN = new PersonPhonenumber();
+                nPPN.Person = person;
+                nPPN.Number = phoneNumber.Number;
+                nPPN.Type = phoneNumber.Type.Split('.').Last().Split(':').Last();
+                
+                personEntities.PersonPhonenumbers.Add(nPPN);
+            }
             personEntities.SaveChanges();
             Person = new Person();
+            while (PhoneNumbers.Count > 0)
+            {
+                PhoneNumbers.RemoveAt(PhoneNumbers.Count - 1);
+            }
         }
 
         public event EventHandler DialogClosed;
@@ -75,9 +93,31 @@ namespace Probeaufgabe_WPF.ViewModel
                 onPropertyChanged(nameof(Person));
             }
         }
+        private ObservableCollection<PersonPhonenumber> phoneNumbers;
+        public ObservableCollection<PersonPhonenumber> PhoneNumbers
+        {
+            get { return phoneNumbers; }
+            set
+            {
+                phoneNumbers = value;
+                onPropertyChanged(nameof(PhoneNumbers));
+            }
+        }
+        public void AddPhoneNumber(object obj)
+        {
+            PhoneNumbers.Add(new PersonPhonenumber());
+        }
+
+        public void RemovePhoneNumber(object obj)
+        {
+            PhoneNumbers.Remove(obj as PersonPhonenumber);
+        }
 
         public ICommand AddPersonCommand { get; set; }
         public ICommand UploadPictureCommand { get; set; }
+
+        public ICommand AddPhoneNumberCommand { get; }
+        public ICommand RemovePhoneNumberCommand { get; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

@@ -105,12 +105,16 @@ public partial class Person : INotifyPropertyChanged
         {
             PersonEntities entities = new PersonEntities();
             StringBuilder sb = new StringBuilder();
-            List<PersonPhonenumber> phonenumbers = entities.PersonPhonenumbers.Where(x => x.PersonId == Id).ToList();
-            if (phonenumbers.Count() > 0)
+            if (entities != null)
             {
-                PersonPhonenumber pPN = phonenumbers.FirstOrDefault(x => x.PersonId == Id);
 
-                return sb.Append(pPN.Type + ": ").Append(pPN.Number).ToString();
+                List<PersonPhonenumber> phonenumbers = entities.PersonPhonenumbers.Where(x => x.PersonId == Id).ToList();
+                if (phonenumbers.Count() > 0)
+                {
+                    PersonPhonenumber pPN = phonenumbers.FirstOrDefault(x => x.PersonId == Id);
+
+                    return sb.Append(pPN.Type + ": ").Append(pPN.Number).ToString();
+                }
             }
             return "No number assigned.";
         }

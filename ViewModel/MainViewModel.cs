@@ -15,6 +15,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
+using System.Windows.Controls.Primitives;
+using System.Windows;
 
 namespace Probeaufgabe_WPF.ViewModel
 {
@@ -30,12 +32,15 @@ namespace Probeaufgabe_WPF.ViewModel
         {
             personEntities = new PersonEntities();
             LoadPerson();
+            PhoneNumbers = new ObservableCollection<PersonPhonenumber>();
             DeleteCommand = new Command((s) => V, Delete);
             UpdateCommand = new Command((s) => V, Update);
             UpdatePersonCommand = new Command((s) => V, UpdatePerson);
             AddPersonCommand = new Command((s) => V, AddPerson);
             ReloadTableCommand = new Command((s) => V, ReloadTable);
             UploadPictureCommand = new Command((s) => V, UploadPicture);
+            AddPhoneNumberCommand = new Command((s) => V, AddPhoneNumber);
+            RemovePhoneNumberCommand = new Command((s) => V, RemovePhoneNumber);
 
         }
 
@@ -44,13 +49,15 @@ namespace Probeaufgabe_WPF.ViewModel
             LstPerson = new ObservableCollection<Person>(personEntities.Person);
         }
 
-        //private void AddPerson(object obj)
-        //{
-        //    personEntities.Person.Add(Person);
-        //    personEntities.SaveChanges();
-        //    LstPerson.Add(Person);
-        //    Person = new Person();
-        //}
+        public void AddPhoneNumber(object obj)
+        {
+            PhoneNumbers.Add(new PersonPhonenumber());
+        }
+
+        public void RemovePhoneNumber(object obj)
+        {
+            PhoneNumbers.Remove(obj as PersonPhonenumber);
+        }
         private void AddPerson(object obj)
         {
             AddPersonView addPersonView = new AddPersonView();
@@ -58,23 +65,56 @@ namespace Probeaufgabe_WPF.ViewModel
         }
         private void UpdatePerson(object obj)
         {
+            foreach (var phoneNumber in PhoneNumbers)
+            {
+                PersonPhonenumber nPPN = new PersonPhonenumber();
+                nPPN.Person = person;
+                nPPN.Number = phoneNumber.Number;
+                nPPN.Type = phoneNumber.Type.Split('.').Last().Split(':').Last();
+
+                personEntities.PersonPhonenumbers.Add(nPPN);
+            }
             personEntities.SaveChanges();
             SelectedPerson_ImageSource = null;
+            while (PhoneNumbers.Count > 0)
+            {
+                PhoneNumbers.RemoveAt(PhoneNumbers.Count - 1);
+            }
             SelectedPerson = new Person();
         }
 
         private void Update(object obj)
         {
+            while (PhoneNumbers.Count > 0)
+            {
+                PhoneNumbers.RemoveAt(PhoneNumbers.Count - 1);
+            }
 
             SelectedPerson = obj as Person;
+
+            List<PersonPhonenumber> selectedPersonPhonenumbers = personEntities.PersonPhonenumbers.Where(x => x.PersonId == SelectedPerson.Id).ToList();
+            if (selectedPersonPhonenumbers.Count() > 0)
+                foreach (var phonenumber in selectedPersonPhonenumbers)
+                {
+                    PhoneNumbers.Add(phone number);
+                }
             if (SelectedPerson.Picture != null)
             {
                 Uri newUri = new Uri(SelectedPerson.Picture);
                 SelectedPerson_ImageSource = new BitmapImage(newUri);
             }
+            else
+            {
+                SelectedPerson_ImageSource = null;
+            }    
         }
         public void UploadPicture(object obj)
         {
+            if(SelectedPerson == null)
+            {
+                MessageBox.Show("Please select a person from the list first.");
+                return;
+            }    
             OpenFileDialog openDialog = new OpenFileDialog();
             openDialog.Filter = "Image files|*.bmp;*.jpg;*png";
             openDialog.FilterIndex = 1;
@@ -120,7 +160,20 @@ namespace Probeaufgabe_WPF.ViewModel
         public ICommand UpdateCommand { get; set; }
         public ICommand AddPersonCommand { get; set; }
         public ICommand UploadPictureCommand { get; set; }
+        public ICommand AddPhoneNumberCommand { get; }
+        public ICommand RemovePhoneNumberCommand { get; }
 
+
+        private ObservableCollection<PersonPhonenumber> phoneNumbers;
+        public ObservableCollection<PersonPhonenumber> PhoneNumbers
+        {
+            get { return phoneNumbers; }
+            set
+            {
+                phoneNumbers = value;
+                onPropertyChanged(nameof(PhoneNumbers));
+            }
+        }
         private Person _selectedPerson;
 
         public Person SelectedPerson
@@ -144,45 +197,6 @@ namespace Probeaufgabe_WPF.ViewModel
                 onPropertyChanged(nameof(Person));
             }
 
-        }
-        public PersonPhonenumber[] personPhonenumbers => person.personPhonenumbers.ToArray();
-
-        private string displayPhonenumber;
-
-        public string DisplayPhonenumber
-        {
-            get => Phonenumber();
-            set
-            {
-                displayPhonenumber = value;
-                onPropertyChanged(nameof(DisplayPhonenumber));
-            }
-        }
-
-        public string Phonenumber()
-        {
-            StringBuilder StringBuilder = new StringBuilder();
-
-            PersonPhonenumber personPhonenumber = person.personPhonenumbers.FirstOrDefault();
-            if (!string.IsNullOrEmpty(personPhonenumber.Number))
-            {
-                StringBuilder.AppendLine(personPhonenumber.Type + ": ").Append(personPhonenumber.Number);
-                return StringBuilder.ToString();
-            }
-            return "No phonenumber";
-        }
-
-
-        private PersonPhonenumber personPhonenumber;
-
-        public PersonPhonenumber PersonPhonenumber
-        {
-            get { return personPhonenumber; }
-            set
-            {
-                personPhonenumber = value;
-                onPropertyChanged(nameof(PersonPhonenumber));
-            }
         }
 
         private ObservableCollection<Person> _lstPerson;
