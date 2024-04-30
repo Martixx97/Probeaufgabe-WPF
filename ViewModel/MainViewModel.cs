@@ -92,23 +92,52 @@ namespace Probeaufgabe_WPF.ViewModel
         public Person SelectedPerson
         {
             get { return _selectedPerson; }
-            set { _selectedPerson = value;
+            set
+            {
+                _selectedPerson = value;
                 onPropertyChanged(nameof(SelectedPerson));
             }
 
-        }       
+        }
         private Person person = new Person();
 
         public Person Person
         {
             get { return person; }
-            set {
+            set
+            {
                 person = value;
                 onPropertyChanged(nameof(Person));
             }
 
         }
         public PersonPhonenumber[] personPhonenumbers => person.personPhonenumbers.ToArray();
+
+        private string displayPhonenumber;
+
+        public string DisplayPhonenumber
+        {
+            get => Phonenumber();
+            set
+            {
+                displayPhonenumber = value;
+                onPropertyChanged(nameof(DisplayPhonenumber));
+            }
+        }
+
+        public string Phonenumber()
+        {
+            StringBuilder StringBuilder = new StringBuilder();
+
+            PersonPhonenumber personPhonenumber = person.personPhonenumbers.FirstOrDefault();
+            if (!string.IsNullOrEmpty(personPhonenumber.Number))
+            {
+                StringBuilder.AppendLine(personPhonenumber.Type + ": ").Append(personPhonenumber.Number);
+                return StringBuilder.ToString();
+            }
+            return "No phonenumber";
+        }
+
 
         private PersonPhonenumber personPhonenumber;
 
@@ -118,7 +147,7 @@ namespace Probeaufgabe_WPF.ViewModel
             set
             {
                 personPhonenumber = value;
-                onPropertyChanged(nameof (PersonPhonenumber));
+                onPropertyChanged(nameof(PersonPhonenumber));
             }
         }
 

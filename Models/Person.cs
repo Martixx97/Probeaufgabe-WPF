@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Xaml.Schema;
 
 namespace Probeaufgabe_WPF.Models;
@@ -17,6 +18,7 @@ public partial class Person : INotifyPropertyChanged
     private string? plz;
     private string? location;
     private byte[]? picture;
+    private string firstNumber;
     public ICollection<PersonPhonenumber> personPhonenumbers = new List<PersonPhonenumber>();
 
     public ICollection<PersonPhonenumber> PersonPhonenumbers
@@ -96,6 +98,29 @@ public partial class Person : INotifyPropertyChanged
             onPropertyChanged(nameof(Picture));
         }
     }
+    public string? FirstNumber
+    {
+
+        get
+        {
+            PersonEntities entities = new PersonEntities();
+            StringBuilder sb = new StringBuilder();
+            List<PersonPhonenumber> phonenumbers = entities.PersonPhonenumbers.Where(x => x.PersonId == Id).ToList();
+            if (phonenumbers.Count() > 0)
+            {
+                PersonPhonenumber pPN = phonenumbers.FirstOrDefault(x => x.PersonId == Id);
+
+                return sb.Append(pPN.Type + ": ").Append(pPN.Number).ToString();
+            }
+            return "No number assigned.";
+        }
+        //set
+        //{
+        //    firstNumber = value;
+        //    onPropertyChanged(nameof(FirstNumber));
+        //}
+    }
+
 
 
     public Person()
