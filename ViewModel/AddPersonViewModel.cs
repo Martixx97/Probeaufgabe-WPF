@@ -1,4 +1,5 @@
-﻿using Probeaufgabe_WPF.Commands;
+﻿using Microsoft.Win32;
+using Probeaufgabe_WPF.Commands;
 using Probeaufgabe_WPF.Data;
 using Probeaufgabe_WPF.Models;
 using System;
@@ -10,6 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace Probeaufgabe_WPF.ViewModel
 {
@@ -22,7 +24,22 @@ namespace Probeaufgabe_WPF.ViewModel
         {
             personEntities = new PersonEntities();
             AddPersonCommand = new Command((s) => V, AddPerson);
+            UploadPictureCommand = new Command((s) => V, UploadPioture);
         }
+
+        public void UploadPioture(object obj)
+        {
+            OpenFileDialog openDialog = new OpenFileDialog();
+            openDialog.Filter = "Image files|*.bmp;*.jpg;*png";
+            openDialog.FilterIndex = 1;
+            if (openDialog.ShowDialog() == true)
+            {
+                Uri uri = new Uri(openDialog.FileName);
+                Person.Picture = uri.AbsolutePath;
+                imagePicture.Source = new BitmapImage(uri);
+            }
+        }
+
         private void AddPerson(object obj)
         {
             personEntities.Person.Add(Person);
@@ -42,6 +59,7 @@ namespace Probeaufgabe_WPF.ViewModel
         }
 
         public ICommand AddPersonCommand { get; set; }
+        public ICommand UploadPictureCommand { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

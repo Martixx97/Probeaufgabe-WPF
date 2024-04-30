@@ -54,7 +54,7 @@
                 </StackPanel>
             </StackPanel>
             <StackPanel>
-                <Image x:Name="imagePicture" Margin="0,0,0,0" Width="90" Height="155"  MaxWidth="70" MaxHeight="155">
+                <Image Source="" x:Name="imagePicture" Margin="0,0,0,0" Width="90" Height="155"  MaxWidth="70" MaxHeight="155">
 
                 </Image>
                 <Button Width="90" Click="Picture_Upload_Button_Click">

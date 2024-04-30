@@ -1,4 +1,5 @@
-﻿using Probeaufgabe_WPF.Data;
+﻿using Microsoft.Win32;
+using Probeaufgabe_WPF.Data;
 using Probeaufgabe_WPF.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,10 @@ namespace Probeaufgabe_WPF.Views
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+        private void Picture_Upload_Button_Click(object sender, RoutedEventArgs e)
+        {
+            (DataContext as AddPersonViewModel).UploadPioture();
         }
     }
 }

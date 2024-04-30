@@ -89,12 +89,12 @@ public partial class Person : INotifyPropertyChanged
         }
     }
 
-    public byte[]? Picture
+    public string Picture
     {
 
-        get => picture; set
+        get => Encoding.ASCII.GetString(picture); set
         {
-            picture = value;
+            picture = Encoding.ASCII.GetBytes(value);
             onPropertyChanged(nameof(Picture));
         }
     }
