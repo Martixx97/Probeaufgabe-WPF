@@ -27,7 +27,7 @@ namespace Probeaufgabe_WPF.Views
         {
             InitializeComponent();
 
-            this.DataContext = new MainViewModel();
+            this.DataContext = new OverviewPersonViewModel();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

@@ -38,11 +38,11 @@
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" Margin="4">
                                         <Button Name="Button_Update" Content="Edit" Width="60" Height="25" Margin="10,0,0,0"
-                                                Command="{Binding DataContext.UpdateCommand, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}"
+                                                Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}"
                                                 CommandParameter="{Binding}"/>
 
                                         <Button Name="Button_Delete" Content="Delete" Width="60" Height="25" Margin="10,0,0,0" 
-                                                Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}"
+                                                Command="{Binding DataContext.RemoveCommand, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}"
                                                 CommandParameter="{Binding}"/>
 
 

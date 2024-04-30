@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Probeaufgabe_WPF.Models;
 
@@ -21,9 +22,11 @@ public partial class DatabaseContext : DbContext
 
     public virtual DbSet<PersonPhonenumber> PersonPhonenumbers { get; set; }
 
+    private string connectionString = ConfigurationManager.ConnectionStrings["MyConnectionString"].ConnectionString;
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlite("Data Source=H:\\Program Files\\DB Browser for SQLite\\Probeaufgabe WPF.db");
+        => optionsBuilder.UseSqlite(connectionString);
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

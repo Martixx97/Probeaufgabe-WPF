@@ -20,18 +20,18 @@ using System.Windows;
 
 namespace Probeaufgabe_WPF.ViewModel
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public class OverviewPersonViewModel : INotifyPropertyChanged
     {
         private const bool V = true;
         PersonEntities personEntities;
 
-        public MainViewModel()
+        public OverviewPersonViewModel()
         {
             personEntities = new PersonEntities();
             LoadPerson();
             PhoneNumbers = new ObservableCollection<PersonPhonenumber>();
-            DeleteCommand = new Command((s) => V, Delete);
-            UpdateCommand = new Command((s) => V, Update);
+            RemoveCommand = new Command((s) => V, RemovePerson);
+            EditCommand = new Command((s) => V, Edit);
             UpdatePersonCommand = new Command((s) => V, UpdatePerson);
             AddPersonCommand = new Command((s) => V, AddPerson);
             ReloadTableCommand = new Command((s) => V, ReloadTable);
@@ -55,7 +55,7 @@ namespace Probeaufgabe_WPF.ViewModel
             AddPersonView addPersonView = new AddPersonView();
             addPersonView.ShowDialog();
         }
-        private void Delete(object obj)
+        private void RemovePerson(object obj)
         {
             var person = obj as Person;
             foreach (var phoneNumber in personEntities.PersonPhonenumbers.Where(x => x.PersonId == person.Id).ToList())
@@ -91,7 +91,7 @@ namespace Probeaufgabe_WPF.ViewModel
             SelectedPerson = new Person();
 
         }
-        private void Update(object obj)
+        private void Edit(object obj)
         {
             while (PhoneNumbers.Count > 0)
             {
@@ -144,10 +144,10 @@ namespace Probeaufgabe_WPF.ViewModel
         
         
 
-        public ICommand DeleteCommand { get; set; }
+        public ICommand RemoveCommand { get; set; }
         public ICommand ReloadTableCommand { get; set; }
         public ICommand UpdatePersonCommand { get; set; }
-        public ICommand UpdateCommand { get; set; }
+        public ICommand EditCommand { get; set; }
         public ICommand AddPersonCommand { get; set; }
         public ICommand UploadPictureCommand { get; set; }
         public ICommand AddPhoneNumberCommand { get; }
