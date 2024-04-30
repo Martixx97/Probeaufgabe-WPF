@@ -34,13 +34,16 @@ namespace Probeaufgabe_WPF.Views
 
 
 
-
         private void Send_PersonData_To_DB(object sender, RoutedEventArgs e)
         {
             Dictionary<string, string> phonenumbers = getAllPhonenumbersFromXAMLContainers();
             if (phonenumbers != null)
             {
-                Person person = new Person(Name_TB.Text, Surname_TB.Text, PLZ_TB.Text, Location_TB.Text, null, phonenumbers);
+                Person person = new Person();
+                person.Name = Name_TB.Text;
+                person.Surname = Surname_TB.Text;
+                person.Plz = PLZ_TB.Text;
+                person.Location = Location_TB.Text;
                 personEntities.Person.Add(person);
 
                 if (phonenumbers.Count > 0)

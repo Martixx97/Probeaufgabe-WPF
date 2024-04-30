@@ -1,4 +1,5 @@
-﻿using Probeaufgabe_WPF.Data;
+﻿using Probeaufgabe_WPF.Commands;
+using Probeaufgabe_WPF.Data;
 using Probeaufgabe_WPF.Models;
 using Probeaufgabe_WPF.Views;
 using System;
@@ -29,14 +30,26 @@ namespace Probeaufgabe_WPF.ViewModel
             DeleteCommand = new Command((s) => V, Delete);
             UpdateCommand = new Command((s) => V, Update);
             UpdatePersonCommand = new Command((s) => V, UpdatePerson);
-            AddPersonCommand = new Command((s) => V, this.AddPerson);
+            AddPersonCommand = new Command((s) => V, AddPerson);
+            ReloadTableCommand = new Command((s) => V, ReloadTable);
         }
+
+        private void ReloadTable(object obj)
+        {
+            LstPerson = new ObservableCollection<Person>(personEntities.Person);
+        }
+
+        //private void AddPerson(object obj)
+        //{
+        //    personEntities.Person.Add(Person);
+        //    personEntities.SaveChanges();
+        //    LstPerson.Add(Person);
+        //    Person = new Person();
+        //}
         private void AddPerson(object obj)
         {
-            personEntities.Person.Add(Person);
-            personEntities.SaveChanges();
-            LstPerson.Add(Person);
-            Person = new Person();
+            AddPersonView addPersonView = new AddPersonView();
+            addPersonView.ShowDialog();
         }
         private void UpdatePerson(object obj)
         {
@@ -68,6 +81,7 @@ namespace Probeaufgabe_WPF.ViewModel
         }
 
         public ICommand DeleteCommand { get; set; }
+        public ICommand ReloadTableCommand { get; set; }
 
         public ICommand UpdatePersonCommand { get; set; }
         public ICommand UpdateCommand { get; set; }
@@ -94,6 +108,19 @@ namespace Probeaufgabe_WPF.ViewModel
             }
 
         }
+        public PersonPhonenumber[] personPhonenumbers => person.personPhonenumbers.ToArray();
+
+        private PersonPhonenumber personPhonenumber;
+
+        public PersonPhonenumber PersonPhonenumber
+        {
+            get { return personPhonenumber; }
+            set
+            {
+                personPhonenumber = value;
+                onPropertyChanged(nameof (PersonPhonenumber));
+            }
+        }
 
         private ObservableCollection<Person> _lstPerson;
 
@@ -113,28 +140,6 @@ namespace Probeaufgabe_WPF.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        class Command : ICommand
-        {
-            public event EventHandler? CanExecuteChanged;
 
-            private Action<object> _Execute { get; set; }
-
-            private Func<object, bool> _CanExecute { get; set; }
-
-            public Command(Func<object, bool> CanExecuteMethod, Action<object> ExecuteMethod)
-            {
-                _Execute = ExecuteMethod;
-                _CanExecute = CanExecuteMethod;
-            }
-
-            public bool CanExecute(object? parameter)
-            {
-                return _CanExecute(parameter);
-            }
-            public void Execute(object? parameter)
-            {
-                _Execute(parameter);
-            }
-        }
     }
 }

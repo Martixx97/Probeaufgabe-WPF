@@ -13,6 +13,7 @@ public partial class Person : INotifyPropertyChanged
     private int id;
     private string? name;
     private string? surname;
+    private string? street;
     private string? plz;
     private string? location;
     private byte[]? picture;
@@ -57,6 +58,15 @@ public partial class Person : INotifyPropertyChanged
             onPropertyChanged(nameof(Surname));
         }
     }
+    public string? Street
+    {
+
+        get => street; set
+        {
+            street = value;
+            onPropertyChanged(nameof(Street));
+        }
+    }
     public string? Plz
     {
 
@@ -87,23 +97,7 @@ public partial class Person : INotifyPropertyChanged
         }
     }
 
-    internal Person(string name, string surname, string plz, string location, byte[] picture)
-    {
-        this.Name = name;
-        this.Surname = surname;
-        this.Plz = plz;
-        this.Location = location;
-        this.Picture = picture;
-    }
 
-    internal Person(string name, string surname, string plz, string location, byte[]? picture, Dictionary<string, string> phonenumbers)
-    {
-        this.Name = name;
-        this.Surname = surname;
-        this.Plz = plz;
-        this.Location = location;
-       
-    }
     public Person()
     {
 
