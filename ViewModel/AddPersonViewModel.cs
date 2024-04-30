@@ -17,7 +17,7 @@ using System.Windows.Media.Imaging;
 
 namespace Probeaufgabe_WPF.ViewModel
 {
-    internal class AddPersonViewModel :INotifyPropertyChanged
+    internal class AddPersonViewModel : INotifyPropertyChanged
     {
 
         PersonEntities personEntities;
@@ -29,11 +29,11 @@ namespace Probeaufgabe_WPF.ViewModel
             PhoneNumbers = new ObservableCollection<PersonPhonenumber>();
             AddPersonCommand = new Command((s) => V, AddPerson);
             UploadPictureCommand = new Command((s) => V, UploadPicture);
-            AddPhoneNumberCommand = new Command((s)=> V,AddPhoneNumber);
-            RemovePhoneNumberCommand = new Command((s) => V,RemovePhoneNumber);
+            AddPhoneNumberCommand = new Command((s) => V, AddPhoneNumber);
+            RemovePhoneNumberCommand = new Command((s) => V, RemovePhoneNumber);
 
         }
-
+        #region CRUD-Methods
         public void UploadPicture(object obj)
         {
             OpenFileDialog openDialog = new OpenFileDialog();
@@ -46,6 +46,44 @@ namespace Probeaufgabe_WPF.ViewModel
                 ImageSource = new BitmapImage(uri);
             }
         }
+        private void AddPerson(object obj)
+        {
+            personEntities.Person.Add(Person);
+            foreach (var phoneNumber in PhoneNumbers)
+            {
+                PersonPhonenumber nPPN = new PersonPhonenumber();
+                nPPN.Person = person;
+                nPPN.Number = phoneNumber.Number;
+                nPPN.Type = phoneNumber.Type.Split('.').Last().Split(':').Last();
+
+                personEntities.PersonPhonenumbers.Add(nPPN);
+            }
+            personEntities.SaveChanges();
+            Person = new Person();
+            while (PhoneNumbers.Count > 0)
+            {
+                PhoneNumbers.RemoveAt(PhoneNumbers.Count - 1);
+            }
+        }
+        public void AddPhoneNumber(object obj)
+        {
+            PhoneNumbers.Add(new PersonPhonenumber());
+        }
+
+        public void RemovePhoneNumber(object obj)
+        {
+            PhoneNumbers.Remove(obj as PersonPhonenumber);
+        }
+        #endregion
+
+
+        public ICommand AddPersonCommand { get; set; }
+        public ICommand UploadPictureCommand { get; set; }
+
+        public ICommand AddPhoneNumberCommand { get; }
+        public ICommand RemovePhoneNumberCommand { get; }
+
+        #region Property-Definitions
 
         private ImageSource _imageSource;
         public ImageSource ImageSource
@@ -58,30 +96,6 @@ namespace Probeaufgabe_WPF.ViewModel
             }
         }
 
-        private void AddPerson(object obj)
-        {
-            personEntities.Person.Add(Person);
-            foreach (var phoneNumber in PhoneNumbers) {
-                PersonPhonenumber nPPN = new PersonPhonenumber();
-                nPPN.Person = person;
-                nPPN.Number = phoneNumber.Number;
-                nPPN.Type = phoneNumber.Type.Split('.').Last().Split(':').Last();
-                
-                personEntities.PersonPhonenumbers.Add(nPPN);
-            }
-            personEntities.SaveChanges();
-            Person = new Person();
-            while (PhoneNumbers.Count > 0)
-            {
-                PhoneNumbers.RemoveAt(PhoneNumbers.Count - 1);
-            }
-        }
-
-        public event EventHandler DialogClosed;
-        public void OnDialogClosed()
-        {
-            DialogClosed?.Invoke(this, EventArgs.Empty);
-        }
         private Person person = new Person();
 
         public Person Person
@@ -103,28 +117,22 @@ namespace Probeaufgabe_WPF.ViewModel
                 onPropertyChanged(nameof(PhoneNumbers));
             }
         }
-        public void AddPhoneNumber(object obj)
-        {
-            PhoneNumbers.Add(new PersonPhonenumber());
-        }
 
-        public void RemovePhoneNumber(object obj)
-        {
-            PhoneNumbers.Remove(obj as PersonPhonenumber);
-        }
+        #endregion
 
-        public ICommand AddPersonCommand { get; set; }
-        public ICommand UploadPictureCommand { get; set; }
-
-        public ICommand AddPhoneNumberCommand { get; }
-        public ICommand RemovePhoneNumberCommand { get; }
-
+        #region Events
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void onPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        public event EventHandler DialogClosed;
+        public void OnDialogClosed()
+        {
+            DialogClosed?.Invoke(this, EventArgs.Empty);
+        }
+        #endregion
     }
 
 

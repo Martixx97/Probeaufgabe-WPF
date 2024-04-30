@@ -22,9 +22,6 @@ namespace Probeaufgabe_WPF.ViewModel
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-
-        public ICommand ShowWindowCommand { get; set; }
-
         private const bool V = true;
         PersonEntities personEntities;
 
@@ -43,12 +40,7 @@ namespace Probeaufgabe_WPF.ViewModel
             RemovePhoneNumberCommand = new Command((s) => V, RemovePhoneNumber);
 
         }
-
-        private void ReloadTable(object obj)
-        {
-            LstPerson = new ObservableCollection<Person>(personEntities.Person);
-        }
-
+        #region CRUD-Methods
         public void AddPhoneNumber(object obj)
         {
             PhoneNumbers.Add(new PersonPhonenumber());
@@ -63,6 +55,22 @@ namespace Probeaufgabe_WPF.ViewModel
             AddPersonView addPersonView = new AddPersonView();
             addPersonView.ShowDialog();
         }
+        private void Delete(object obj)
+        {
+            var person = obj as Person;
+            foreach (var phoneNumber in personEntities.PersonPhonenumbers.Where(x => x.PersonId == person.Id).ToList())
+            {
+                personEntities.PersonPhonenumbers.Remove(phoneNumber);
+            }
+            personEntities.Remove(person);
+            LstPerson.Remove(person);
+            personEntities.SaveChanges();
+        }
+
+        private void LoadPerson() //Read Person
+        {
+            LstPerson = new ObservableCollection<Person>(personEntities.Person);
+        }
         private void UpdatePerson(object obj)
         {
             foreach (var phoneNumber in PhoneNumbers)
@@ -76,14 +84,13 @@ namespace Probeaufgabe_WPF.ViewModel
             }
             personEntities.SaveChanges();
             SelectedPerson_ImageSource = null;
-                        while (PhoneNumbers.Count > 0)
+            while (PhoneNumbers.Count > 0)
             {
                 PhoneNumbers.RemoveAt(PhoneNumbers.Count - 1);
             }
             SelectedPerson = new Person();
 
         }
-
         private void Update(object obj)
         {
             while (PhoneNumbers.Count > 0)
@@ -107,8 +114,15 @@ namespace Probeaufgabe_WPF.ViewModel
             else
             {
                 SelectedPerson_ImageSource = null;
-            }    
+            }
         }
+        #endregion
+
+        private void ReloadTable(object obj)
+        {
+            LstPerson = new ObservableCollection<Person>(personEntities.Person);
+        }
+      
         public void UploadPicture(object obj)
         {
             if(SelectedPerson == null)
@@ -127,6 +141,19 @@ namespace Probeaufgabe_WPF.ViewModel
             }
         }
 
+        
+        
+
+        public ICommand DeleteCommand { get; set; }
+        public ICommand ReloadTableCommand { get; set; }
+        public ICommand UpdatePersonCommand { get; set; }
+        public ICommand UpdateCommand { get; set; }
+        public ICommand AddPersonCommand { get; set; }
+        public ICommand UploadPictureCommand { get; set; }
+        public ICommand AddPhoneNumberCommand { get; }
+        public ICommand RemovePhoneNumberCommand { get; }
+
+        #region Property-Definitions
         private ImageSource _selectedPerson_imageSource;
         public ImageSource SelectedPerson_ImageSource
         {
@@ -137,34 +164,6 @@ namespace Probeaufgabe_WPF.ViewModel
                 onPropertyChanged(nameof(SelectedPerson_ImageSource));
             }
         }
-        private void Delete(object obj)
-        {
-            var person = obj as Person;
-            foreach (var phoneNumber in personEntities.PersonPhonenumbers.Where(x => x.PersonId == person.Id).ToList())
-            {
-                personEntities.PersonPhonenumbers.Remove(phoneNumber);
-            }
-            personEntities.Remove(person);
-            LstPerson.Remove(person);
-            personEntities.SaveChanges();
-        }
-
-        private void LoadPerson() //Read Person
-        {
-            LstPerson = new ObservableCollection<Person>(personEntities.Person);
-        }
-
-        public ICommand DeleteCommand { get; set; }
-        public ICommand ReloadTableCommand { get; set; }
-
-        public ICommand UpdatePersonCommand { get; set; }
-        public ICommand UpdateCommand { get; set; }
-        public ICommand AddPersonCommand { get; set; }
-        public ICommand UploadPictureCommand { get; set; }
-        public ICommand AddPhoneNumberCommand { get; }
-        public ICommand RemovePhoneNumberCommand { get; }
-
-
         private ObservableCollection<PersonPhonenumber> phoneNumbers;
         public ObservableCollection<PersonPhonenumber> PhoneNumbers
         {
@@ -211,6 +210,7 @@ namespace Probeaufgabe_WPF.ViewModel
                 onPropertyChanged(nameof(LstPerson));
             }
         }
+        #endregion
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void onPropertyChanged([CallerMemberName] string propertyName = null)
