@@ -116,7 +116,7 @@
                             <Button Grid.Row="6" Grid.ColumnSpan="2" Content="Add more Phonenumbers" Margin="5" HorizontalAlignment="Center" 
                                     Width="150" Command="{Binding AddPhonenumbersCommand}"/>
                             <StackPanel Grid.Column="2" Grid.RowSpan="6">
-                                <Image Source="{Binding SelectedPerson.Picture}" x:Name="imagePicture" Margin="0,0,0,0" Width="90" Height="155"  MaxWidth="70" MaxHeight="155">
+                                <Image Source="{Binding SelectedPerson_ImageSource}" x:Name="imagePicture" Margin="0,0,0,0" Width="200" Height="155"  MaxWidth="200" MaxHeight="155">
 
                                 </Image>
                                 <Button Width="90" Command="{Binding UploadPictureCommand}" Content="Upload picture"/>

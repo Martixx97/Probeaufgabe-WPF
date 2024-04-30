@@ -69,10 +69,10 @@
                                 Width="100" Command="{Binding AddPersonCommand}"/>
 
                         <StackPanel Grid.Column="2" Grid.RowSpan="6">
-                            <Image Source="{Binding Person.Picture}" x:Name="imagePicture" Margin="0,0,0,0" Width="90" Height="155"  MaxWidth="70" MaxHeight="155">
+                            <Image Source="{Binding ImageSource}" x:Name="imagePicture" Margin="0,0,0,0" Width="200" Height="155"  MaxWidth="200" MaxHeight="155">
 
                             </Image>
-                            <Button Width="90" Command="{Binding UploadPicture}" Content="Upload picture"/>
+                            <Button Width="90" Command="{Binding UploadPictureCommand}" Content="Upload picture"/>
                         </StackPanel>
                     </Grid>
                 </StackPanel>

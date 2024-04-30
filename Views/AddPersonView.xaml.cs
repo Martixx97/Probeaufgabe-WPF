@@ -31,10 +31,7 @@ namespace Probeaufgabe_WPF.Views
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
-        }
-        private void Picture_Upload_Button_Click(object sender, RoutedEventArgs e)
-        {
-            (DataContext as AddPersonViewModel).UploadPioture();
+            (DataContext as AddPersonViewModel)?.OnDialogClosed();
         }
     }
 }

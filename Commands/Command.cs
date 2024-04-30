@@ -21,11 +21,11 @@ namespace Probeaufgabe_WPF.Commands
             _CanExecute = CanExecuteMethod;
         }
 
-        public bool CanExecute(object? parameter)
+        public virtual bool CanExecute(object? parameter)
         {
             return _CanExecute(parameter);
         }
-        public void Execute(object? parameter)
+        public virtual void Execute(object? parameter)
         {
             _Execute(parameter);
         }

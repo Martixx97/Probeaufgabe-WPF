@@ -17,7 +17,7 @@ public partial class Person : INotifyPropertyChanged
     private string? street;
     private string? plz;
     private string? location;
-    private byte[]? picture;
+    private string? picture;
     private string firstNumber;
     public ICollection<PersonPhonenumber> personPhonenumbers = new List<PersonPhonenumber>();
 
@@ -89,12 +89,12 @@ public partial class Person : INotifyPropertyChanged
         }
     }
 
-    public string Picture
+    public string? Picture
     {
 
-        get => Encoding.ASCII.GetString(picture); set
+        get => picture; set
         {
-            picture = Encoding.ASCII.GetBytes(value);
+            picture = value;
             onPropertyChanged(nameof(Picture));
         }
     }

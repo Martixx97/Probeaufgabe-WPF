@@ -1,4 +1,5 @@
-﻿using Probeaufgabe_WPF.Commands;
+﻿using Microsoft.Win32;
+using Probeaufgabe_WPF.Commands;
 using Probeaufgabe_WPF.Data;
 using Probeaufgabe_WPF.Models;
 using Probeaufgabe_WPF.Views;
@@ -12,6 +13,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace Probeaufgabe_WPF.ViewModel
 {
@@ -32,6 +35,8 @@ namespace Probeaufgabe_WPF.ViewModel
             UpdatePersonCommand = new Command((s) => V, UpdatePerson);
             AddPersonCommand = new Command((s) => V, AddPerson);
             ReloadTableCommand = new Command((s) => V, ReloadTable);
+            UploadPictureCommand = new Command((s) => V, UploadPicture);
+
         }
 
         private void ReloadTable(object obj)
@@ -54,6 +59,7 @@ namespace Probeaufgabe_WPF.ViewModel
         private void UpdatePerson(object obj)
         {
             personEntities.SaveChanges();
+            SelectedPerson_ImageSource = null;
             SelectedPerson = new Person();
         }
 
@@ -61,8 +67,35 @@ namespace Probeaufgabe_WPF.ViewModel
         {
 
             SelectedPerson = obj as Person;
+            if (SelectedPerson.Picture != null)
+            {
+                Uri newUri = new Uri(SelectedPerson.Picture);
+                SelectedPerson_ImageSource = new BitmapImage(newUri);
+            }
+        }
+        public void UploadPicture(object obj)
+        {
+            OpenFileDialog openDialog = new OpenFileDialog();
+            openDialog.Filter = "Image files|*.bmp;*.jpg;*png";
+            openDialog.FilterIndex = 1;
+            if (openDialog.ShowDialog() == true)
+            {
+                Uri uri = new Uri(openDialog.FileName);
+                SelectedPerson.Picture = uri.ToString();
+                SelectedPerson_ImageSource = new BitmapImage(uri);
+            }
         }
 
+        private ImageSource _selectedPerson_imageSource;
+        public ImageSource SelectedPerson_ImageSource
+        {
+            get { return _selectedPerson_imageSource; }
+            set
+            {
+                _selectedPerson_imageSource = value;
+                onPropertyChanged(nameof(SelectedPerson_ImageSource));
+            }
+        }
         private void Delete(object obj)
         {
             var person = obj as Person;
@@ -86,6 +119,7 @@ namespace Probeaufgabe_WPF.ViewModel
         public ICommand UpdatePersonCommand { get; set; }
         public ICommand UpdateCommand { get; set; }
         public ICommand AddPersonCommand { get; set; }
+        public ICommand UploadPictureCommand { get; set; }
 
         private Person _selectedPerson;
 
